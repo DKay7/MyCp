@@ -97,16 +97,24 @@ CpErrCodes copy_metainfo (char* input_file, char* output_file) {
     ass (output_file, "Null pointer passed", CpErrCodes::NULL_PTR_PASSED);
 
     struct stat stat_bufer;
-    time_t mtime;
     struct utimbuf new_times;
     
     int stat_result = stat (input_file, &stat_bufer);
-    ass ((stat_result != -1), "Can't get file stat", CpErrCodes::STAT_FUNC_FAILED);
+    ass ((stat_result != -1), "Can't get input file stat", CpErrCodes::STAT_FUNC_FAILED);
 
-    mtime = stat_bufer.st_mtime; 
 
-    new_times.actime  = stat_bufer.st_atime; 
 
-    ass(utime(output_file, &new_times) == 0, "Can't set new file stat", UTIME_FUNC_FAILED);
 
+
+    new_times.actime  = stat_bufer.st_atim.tv_sec;
+    new_times.modtime  = stat_bufer.st_ctim.tv_sec; 
+
+    ass(utime(output_file, &new_times) == 0, 
+        "Can't set new file stat", CpErrCodes::UTIME_FUNC_FAILED);
+    ass(chmod(output_file, stat_bufer.st_mode) == 0, 
+        "Can't set new file mode", CpErrCodes::CHMOD_FUNC_FAILED);
+    ass(chown(output_file, stat_bufer.st_uid, stat_bufer.st_gid) == 0, 
+        "Can't set file owners", CpErrCodes::CHOWN_FUNC_FAILED);
+
+    return CpErrCodes::OK;
 }

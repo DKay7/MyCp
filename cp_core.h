@@ -13,6 +13,8 @@ enum CpErrCodes {
     STAT_FUNC_FAILED        = -7,
     NULL_PTR_PASSED         = -8,
     UTIME_FUNC_FAILED       = -9,
+    CHMOD_FUNC_FAILED       = -10,
+    CHOWN_FUNC_FAILED       = -11,
 };
 
 //flexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
